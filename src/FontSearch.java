@@ -1,4 +1,8 @@
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,9 +13,34 @@ import com.aspose.psd.fileformats.psd.layers.TextLayer;
 public class FontSearch
 {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws FontFormatException, IOException
 	{
-		File dir = new File(System.getProperty("user.dir"));
+		String homePath = System.getProperty("user.home");
+		String fontDirectory = homePath + "\\AppData\\Local\\Microsoft\\Windows\\Fonts";
+		
+		File fontScanner = new File(fontDirectory);
+		
+		File[] fontList = fontScanner.listFiles();
+		ArrayList<Font> fonts = new ArrayList<Font>();
+		
+		for (int x = 0; x < fontList.length; x++)
+		{
+			if (!fontList[x].isDirectory())
+			{
+				try
+				{
+					fonts.add(Font.createFont(Font.TRUETYPE_FONT, fontList[x]));
+					System.out.println(fonts.get(fonts.size()-1).getFontName());
+				}
+				catch (Exception e)
+				{
+					int y = fontList[x].toString().lastIndexOf("\\");
+					System.out.println("Font " + fontList[x].toString().substring(y+1) + " had an error.");
+				}
+			}
+		}
+		
+		/*File dir = new File(System.getProperty("user.dir"));
 		PsdImage psdImage;
 		ArrayList<String> list = new ArrayList<String>();
 
@@ -55,7 +84,7 @@ public class FontSearch
 				}
 
 			}
-		}
+		}*/
 
 	}
 
